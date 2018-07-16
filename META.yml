@@ -16,6 +16,7 @@ meta-spec:
 name: RT-Extension-NotifySlack
 no_index:
   directory:
+    - etc
     - inc
 requires:
   perl: 5.10.1
