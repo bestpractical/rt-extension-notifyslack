@@ -31,7 +31,16 @@ sub Commit {
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
-    my $slack_message = 'Ticket #' . $self->TicketObj->id . ' updated';
+    my $ticket = $self->TicketObj;
+    my $rt_url = RT->Config->Get( 'WebURL' )."Ticket/Display.html?id=".$ticket->id;
+    my $txn = $self->TransactionObj;
+
+    # Slack uses the format <www.example.com|Example Text> to insert a link into the payload's text
+    my $slack_message = '<'.$rt_url.'|Ticket #'.$ticket->id.'>: '.$txn->BriefDescription;
+
+    if ( $txn->Type eq 'Comment' || $txn->Type eq 'Correspond' ) {
+        $slack_message = $slack_message . ' on <'.$rt_url.'#txn-'.$txn->id.'| #txn-'.$txn->id.'>';
+    }
 
     my $payload = {
         text => $slack_message,
