@@ -3,5 +3,6 @@ push @ScripActions, (
         Name        => 'Notify Slack',
         Description => 'Post ticket updates to slack channel',
         ExecModule  => 'NotifySlack',
+        Argument    => '#general',
     },
 );

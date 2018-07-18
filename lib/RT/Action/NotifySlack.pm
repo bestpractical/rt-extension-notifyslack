@@ -19,18 +19,24 @@ sub Prepare  {
 sub Commit {
     my $self = shift;
 
-    my $webhook_url = RT->Config->Get( 'SlackWebHookUrl' );
-    my $default_channel = RT->Config->Get( 'SlackDefaultChannel' );
+    my $webhook_urls = RT->Config->Get( 'SlackWebHookUrls' ) || {};
+    my $channel = $self->Argument;
 
+    my $webhook_url = undef;
+    for my $key ( keys %{ $webhook_urls } ) {
+        if ( $key eq $channel ) {
+            $webhook_url = $webhook_urls->{ $key };
+        }
+    }
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
     my $slack_message = 'Ticket #' . $self->TicketObj->id . ' updated';
 
     my $payload = {
-        channel => $default_channel // $default_channel,
         text => $slack_message,
     };
+    return RT::Logger->error( 'Slack channel: ' . $channel .  ' not found. Check %SlackWebHookUrls config values.' ) unless $webhook_url;
 
     my $req = POST("$webhook_url", ['payload' => encode_json($payload)]);
 
