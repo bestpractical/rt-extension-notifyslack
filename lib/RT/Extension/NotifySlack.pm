@@ -6,18 +6,17 @@ our $VERSION = '0.01';
 
 =head1 NAME
 
-RT-Extension-NotifySlack - [One line description of module's purpose here]
+RT-Extension-NotifySlack - RT ScripAction Slack integration
 
 =head1 DESCRIPTION
 
-[Why would someone install this extension? What does it do? What problem
-does it solve?]
+This extension provides the following Slack functionality with RT:
+
+* post ticket updates to desired Slack channels
 
 =head1 RT VERSION
 
-Works with RT [What versions of RT is this known to work with?]
-
-[Make sure to use requires_rt and rt_too_new in Makefile.PL]
+Works with RT 4.4
 
 =head1 INSTALLATION
 
@@ -30,6 +29,15 @@ Works with RT [What versions of RT is this known to work with?]
 =item C<make install>
 
 May need root permissions
+
+=item C<make initdb>
+
+See the CONFIGURATION section below before running this command.
+
+Only run this the first time you install this module.
+
+If you run this twice, you may end up with duplicate data
+in your database.
 
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
 
@@ -44,6 +52,20 @@ Add this line:
 =item Restart your webserver
 
 =back
+
+=head1 CONFIGURATION
+
+You must add the desired Slack channels and webhook URLs to the
+RT %SlackWebHookUrls config value in RT_SiteConfig.pm. These values
+can be retrieved from Slack's API Incoming Webhooks configuration
+settings.
+
+The 'Notify Slack' ScripAction posts to one Slack channel. The default
+Slack channel is currently set to #general. You can update this in
+the initialdata file by changing the 'Notify Slack' ScripAction
+Argument to the desired Slack channel ( be sure to include the '#'
+when indicating the channel name ). To post to additional Slack channels,
+copy the ScripAction giving it a new Name and Argument.
 
 =head1 AUTHOR
 
