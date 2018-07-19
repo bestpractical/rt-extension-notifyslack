@@ -1,12 +1,12 @@
 use strict;
 use warnings;
-package RT::Extension::Slack::Integration;
+package RT::Extension::NotifySlack;
 
 our $VERSION = '0.01';
 
 =head1 NAME
 
-RT-Extension-Slack-Integration - [One line description of module's purpose here]
+RT-Extension-NotifySlack - [One line description of module's purpose here]
 
 =head1 DESCRIPTION
 
@@ -35,7 +35,7 @@ May need root permissions
 
 Add this line:
 
-    Plugin('RT::Extension::Slack::Integration');
+    Plugin('RT::Extension::NotifySlack');
 
 =item Clear your mason cache
 
@@ -50,15 +50,15 @@ Add this line:
 Best Practical Solutions, LLC E<lt>modules@bestpractical.comE<gt>
 
 =for html <p>All bugs should be reported via email to <a
-href="mailto:bug-RT-Extension-Slack-Integration@rt.cpan.org">bug-RT-Extension-Slack-Integration@rt.cpan.org</a>
+href="mailto:bug-RT-Extension-NotifySlack@rt.cpan.org">bug-RT-Extension-NotifySlack@rt.cpan.org</a>
 or via the web at <a
-href="http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-Slack-Integration">rt.cpan.org</a>.</p>
+href="http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-NotifySlack">rt.cpan.org</a>.</p>
 
 =for text
     All bugs should be reported via email to
-        bug-RT-Extension-Slack-Integration@rt.cpan.org
+        bug-RT-Extension-NotifySlack@rt.cpan.org
     or via the web at
-        http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-Slack-Integration
+        http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-NotifySlack
 
 =head1 LICENSE AND COPYRIGHT
 
