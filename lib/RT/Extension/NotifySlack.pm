@@ -4,6 +4,14 @@ package RT::Extension::NotifySlack;
 
 our $VERSION = '0.01';
 
+use RT::Transaction;
+
+# Set message for Slack notification transactions
+$RT::Transaction::_BriefDescriptions{'SlackNotified'} = sub {
+    my $self = shift;
+    return ( 'Slack notified' );    #loc()
+};
+
 =head1 NAME
 
 RT-Extension-NotifySlack - RT ScripAction Slack integration

@@ -35,6 +35,9 @@ sub Commit {
     my $rt_url = RT->Config->Get( 'WebURL' )."Ticket/Display.html?id=".$ticket->id;
     my $txn = $self->TransactionObj;
 
+    # prevent infinite loop between RT and Slack
+    return 0 if $txn->Type eq 'SlackNotified';
+
     # Slack uses the format <www.example.com|Example Text> to insert a link into the payload's text
     my $slack_message = '<'.$rt_url.'|Ticket #'.$ticket->id.'>: '.$txn->BriefDescription;
 
@@ -53,6 +56,7 @@ sub Commit {
 
     if ($resp->is_success) {
         RT::Logger->debug('Posted to slack!');
+        $ticket->_NewTransaction( Type => 'SlackNotified' );
     } else {
         RT::Logger->debug("Failed post to slack, status is:" . $resp->status_line);
     }
