@@ -66,7 +66,11 @@ Add this line:
 You must add the desired Slack channels and webhook URLs to the
 RT %SlackWebHookUrls config value in RT_SiteConfig.pm. These values
 can be retrieved from Slack's API Incoming Webhooks configuration
-settings.
+settings. See example below:
+
+    Set( %SlackWebHookUrls,
+        '#channel' => 'https://myslackwebhookurl...',
+    );
 
 The 'Notify Slack' ScripAction posts to one Slack channel. The default
 Slack channel is currently set to #general. You can update this in
