@@ -28,6 +28,8 @@ sub Commit {
             $webhook_url = $webhook_urls->{ $key };
         }
     }
+    return RT::Logger->error( 'Slack channel: ' . $channel .  ' not found. Check %SlackWebHookUrls config values.' ) unless $webhook_url;
+
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
@@ -48,7 +50,6 @@ sub Commit {
     my $payload = {
         text => $slack_message,
     };
-    return RT::Logger->error( 'Slack channel: ' . $channel .  ' not found. Check %SlackWebHookUrls config values.' ) unless $webhook_url;
 
     my $req = POST("$webhook_url", ['payload' => encode_json($payload)]);
 
