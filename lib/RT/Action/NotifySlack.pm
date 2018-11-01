@@ -18,6 +18,11 @@ sub Prepare  {
 
 sub Commit {
     my $self = shift;
+    # Need to create our MIMEObj
+    $self->TemplateObj->Parse(
+        TicketObj      => $self->TicketObj,
+        TransactionObj => $self->TransactionObj,
+    );
 
     my $webhook_urls = RT->Config->Get( 'SlackWebHookUrls' ) || {};
     my $channel = $self->Argument;
@@ -40,18 +45,9 @@ sub Commit {
     # prevent infinite loop between RT and Slack
     return 0 if $txn->Type eq 'SlackNotified';
 
-    # Slack uses the format <www.example.com|Example Text> to insert a link into the payload's text
-    my $slack_message = '<'.$rt_url.'|Ticket #'.$ticket->id.'>: '.$txn->BriefDescription;
+    my $payload = $self->TemplateObj->MIMEObj->as_string;
 
-    if ( $txn->Type eq 'Comment' || $txn->Type eq 'Correspond' ) {
-        $slack_message = $slack_message . ' on <'.$rt_url.'#txn-'.$txn->id.'| #txn-'.$txn->id.'>';
-    }
-
-    my $payload = {
-        text => $slack_message,
-    };
-
-    my $req = POST("$webhook_url", ['payload' => encode_json($payload)]);
+    my $req = POST("$webhook_url", ['payload' => $payload]);
 
     my $resp = $ua->request($req);
 
