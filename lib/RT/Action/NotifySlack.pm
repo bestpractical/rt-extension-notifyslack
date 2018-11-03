@@ -38,10 +38,6 @@ sub Commit {
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
-    my $ticket = $self->TicketObj;
-    my $rt_url = RT->Config->Get( 'WebURL' )."Ticket/Display.html?id=".$ticket->id;
-    my $txn = $self->TransactionObj;
-
     # prevent infinite loop between RT and Slack
     return 0 if $txn->Type eq 'SlackNotified';
 
