@@ -1,4 +1,14 @@
-push @ScripActions, (
+use strict;
+use warnings;
+
+our @ScripActions;
+our @Scrips;
+our @Templates;
+
+########################################################################
+### ScripActions
+########################################################################
+@ScripActions = (
     {
         Name        => 'Notify Slack',
         Description => 'Post ticket updates to slack channel',
@@ -6,3 +16,48 @@ push @ScripActions, (
         Argument    => '#general',
     },
 );
+
+########################################################################
+### Templates
+########################################################################
+@Templates = ({
+    Name => 'Slack Create Message',
+    Description => 'Send a message to slack channel on ticket create.',
+    Content =>q[
+\{
+    "attachments": [
+        \{
+            "color": "#36a64f",
+            "title": "#{$Ticket->Id} {$Ticket->Subject} Created:",
+            "title_link": "{RT->Config->Get( 'WebURL' )}Ticket/Display.html?id={$Ticket->Id}",
+            "text": "{$Transaction->Content}",
+            "fields": [
+                \{
+                    "title" : 'Queue',
+                    "value" : "{$Ticket->QueueObj->Name}",
+                    "short" : false,
+                \},
+                \{
+                    "title" : 'Owner',
+                    "value" : "{$Ticket->OwnerObj->Name}",
+                    "short" : false,
+                \}
+            ],
+        \}
+    ]
+\}]
+});
+
+########################################################################
+### Scrips
+########################################################################
+@Scrips = (
+    {
+        Description     => 'On create alert slack channel.',
+        ScripCondition  => 'On Create',
+        ScripAction     => 'Notify Slack',
+        Template        => 'Slack Create Message',
+    },
+);
+
+1;
