@@ -38,16 +38,13 @@ sub Commit {
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
-    # prevent infinite loop between RT and Slack
-    return 0 if $self->TransactionObj->Type eq 'SlackNotified';
-
     my $payload = $self->TemplateObj->MIMEObj->as_string;
 
     my $req = POST("$webhook_url", ['payload' => $payload]);
 
     my $resp = $ua->request($req);
 
-    RT::Logger->debug("Failed post to slack, status is:" . $resp->status_line) unless $resp->is_success;
+    RT::Logger->error("Failed post to slack, status is:" . $resp->status_line) unless $resp->is_success;
 
     return 1;
 }
