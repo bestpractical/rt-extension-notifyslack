@@ -39,7 +39,7 @@ sub Commit {
     $ua->timeout(15);
 
     # prevent infinite loop between RT and Slack
-    return 0 if $txn->Type eq 'SlackNotified';
+    return 0 if $self->TransactionObj->Type eq 'SlackNotified';
 
     my $payload = $self->TemplateObj->MIMEObj->as_string;
 
@@ -47,12 +47,7 @@ sub Commit {
 
     my $resp = $ua->request($req);
 
-    if ($resp->is_success) {
-        RT::Logger->debug('Posted to slack!');
-        $ticket->_NewTransaction( Type => 'SlackNotified' );
-    } else {
-        RT::Logger->debug("Failed post to slack, status is:" . $resp->status_line);
-    }
+    RT::Logger->debug("Failed post to slack, status is:" . $resp->status_line) unless $resp->is_success;
 
     return 1;
 }
