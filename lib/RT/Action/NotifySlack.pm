@@ -38,6 +38,7 @@ sub Commit {
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
+    return unless $self->TemplateObj && $self->TemplateObj->MIMEObj;
     my $payload = $self->TemplateObj->MIMEObj->as_string;
 
     my $req = POST("$webhook_url", ['payload' => $payload]);
