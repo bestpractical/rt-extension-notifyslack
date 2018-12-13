@@ -9,7 +9,7 @@ use JSON;
 
 sub Describe  {
   my $self = shift;
-  return (ref $self . " will post ticket updates to slack channel.");
+  return (ref $self . "Send template payload to Slack API.");
 }
 
 sub Prepare  {
@@ -18,6 +18,11 @@ sub Prepare  {
 
 sub Commit {
     my $self = shift;
+    # Need to create our MIMEObj
+    $self->TemplateObj->Parse(
+        TicketObj      => $self->TicketObj,
+        TransactionObj => $self->TransactionObj,
+    );
 
     my $webhook_urls = RT->Config->Get( 'SlackWebHookUrls' ) || {};
     my $channel = $self->Argument;
@@ -33,34 +38,14 @@ sub Commit {
     my $ua = LWP::UserAgent->new;
     $ua->timeout(15);
 
-    my $ticket = $self->TicketObj;
-    my $rt_url = RT->Config->Get( 'WebURL' )."Ticket/Display.html?id=".$ticket->id;
-    my $txn = $self->TransactionObj;
+    return unless $self->TemplateObj && $self->TemplateObj->MIMEObj;
+    my $payload = $self->TemplateObj->MIMEObj->as_string;
 
-    # prevent infinite loop between RT and Slack
-    return 0 if $txn->Type eq 'SlackNotified';
-
-    # Slack uses the format <www.example.com|Example Text> to insert a link into the payload's text
-    my $slack_message = '<'.$rt_url.'|Ticket #'.$ticket->id.'>: '.$txn->BriefDescription;
-
-    if ( $txn->Type eq 'Comment' || $txn->Type eq 'Correspond' ) {
-        $slack_message = $slack_message . ' on <'.$rt_url.'#txn-'.$txn->id.'| #txn-'.$txn->id.'>';
-    }
-
-    my $payload = {
-        text => $slack_message,
-    };
-
-    my $req = POST("$webhook_url", ['payload' => encode_json($payload)]);
+    my $req = POST("$webhook_url", ['payload' => $payload]);
 
     my $resp = $ua->request($req);
 
-    if ($resp->is_success) {
-        RT::Logger->debug('Posted to slack!');
-        $ticket->_NewTransaction( Type => 'SlackNotified' );
-    } else {
-        RT::Logger->debug("Failed post to slack, status is:" . $resp->status_line);
-    }
+    RT::Logger->error("Failed post to slack, status is:" . $resp->status_line) unless $resp->is_success;
 
     return 1;
 }
