@@ -9,7 +9,7 @@ use JSON;
 
 sub Describe  {
   my $self = shift;
-  return (ref $self . " will post ticket updates to slack channel.");
+  return (ref $self . "Send template payload to Slack API.");
 }
 
 sub Prepare  {

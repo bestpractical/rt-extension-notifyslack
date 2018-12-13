@@ -18,9 +18,10 @@ RT-Extension-NotifySlack - RT ScripAction Slack integration
 
 =head1 DESCRIPTION
 
-This extension provides the following Slack functionality with RT:
-
-* post ticket updates to desired Slack channels
+This extension allows for Slack updates to be sent out in the
+same manner that emails are dispatched. Meaning that a on any
+condition a Slack action can be called and a Slack specififc
+template can be used to update a Slack channel.
 
 =head1 RT VERSION
 
@@ -65,7 +66,7 @@ Add this line:
 
 You must add the desired Slack channels and webhook URLs to the
 RT %SlackWebHookUrls config value in RT_SiteConfig.pm. These values
-can be retrieved from Slack's API Incoming Webhooks configuration
+can be retrieved from the Slack API's Incoming Webhooks configuration
 settings. See example below:
 
     Set( %SlackWebHookUrls,
@@ -76,8 +77,9 @@ The 'Notify Slack' ScripAction posts to one Slack channel. The default
 Slack channel is currently set to #general. You can update this in
 the initialdata file by changing the 'Notify Slack' ScripAction
 Argument to the desired Slack channel ( be sure to include the '#'
-when indicating the channel name ). To post to additional Slack channels,
-copy the ScripAction giving it a new Name and Argument.
+when indicating the channel name and no '#' for direct messaging ).
+To post to additional Slack channels, copy the ScripAction giving it
+a new Name and Argument, something like "Slack Updates To #Support".
 
 =head1 AUTHOR
 
