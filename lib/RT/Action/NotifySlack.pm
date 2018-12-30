@@ -22,6 +22,8 @@ sub Commit {
     $self->TemplateObj->Parse(
         TicketObj      => $self->TicketObj,
         TransactionObj => $self->TransactionObj,
+        Argument       => $self->Argument,
+        ConditionArgs  => $self->ScripObj->{values}->{ConditionArgs}
     );
 
     my $webhook_urls = RT->Config->Get( 'SlackWebHookUrls' ) || {};
