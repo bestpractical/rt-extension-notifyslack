@@ -47,7 +47,7 @@ sub Commit {
 
     my $resp = $ua->request($req);
 
-    RT::Logger->error("Failed post to slack, status is:" . $resp->status_line) unless $resp->is_success;
+    RT::Logger->error( "Failed post to slack, status is:" . $resp->status_line . $resp->decoded_content() ) unless $resp->is_success;
 
     return 1;
 }
