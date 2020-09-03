@@ -1,4 +1,7 @@
 Revision history for RT-Extension-NotifySlack
 
+0.02 2020-09-03
+ - Update sample template to correctly handle ticket values like Subject
+
 0.01 2020-07-22
  - Initial version
