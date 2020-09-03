@@ -24,28 +24,28 @@ our @Templates;
     Name => 'Slack Create Message',
     Description => 'Send a message to slack channel on ticket create.',
     Content =>q[
-\{
-    "attachments": [
-        \{
-            "color": "#36a64f",
-            "title": "#{$Ticket->Id} {$Ticket->Subject} Created:",
-            "title_link": "{RT->Config->Get( 'WebURL' )}Ticket/Display.html?id={$Ticket->Id}",
-            "text": "{$Transaction->Content}",
-            "fields": [
-                \{
-                    "title" : 'Queue',
-                    "value" : "{$Ticket->QueueObj->Name}",
-                    "short" : false,
-                \},
-                \{
-                    "title" : 'Owner',
-                    "value" : "{$Ticket->OwnerObj->Name}",
-                    "short" : false,
-                \}
-            ],
-        \}
-    ]
-\}]
+{
+    my $payload = {
+        attachments => [
+            {   "color"      => "#36a64f",
+                "title"      => '#' . $Ticket->Id . ' ' . $Ticket->Subject . ' Created:',
+                "title_link" => RT->Config->Get('WebURL') . 'Ticket/Display.html?id=' . $Ticket->Id,
+                "text"       => $Transaction->Content,
+                "fields"     => [
+                    {   "title" => "Queue",
+                        "value" => $Ticket->QueueObj->Name,
+                        "short" => 0,
+                    },
+                    {   "title" => "Owner",
+                        "value" => $Ticket->OwnerObj->Name,
+                        "short" => 0,
+                    },
+                ],
+            },
+        ],
+    };
+    JSON::to_json($payload);
+}
 });
 
 ########################################################################
