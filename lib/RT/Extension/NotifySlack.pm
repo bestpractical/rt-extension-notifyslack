@@ -14,14 +14,14 @@ $RT::Transaction::_BriefDescriptions{'SlackNotified'} = sub {
 
 =head1 NAME
 
-RT-Extension-NotifySlack - RT ScripAction Slack integration
+RT-Extension-NotifySlack - RT ScripAction Slack/Teams integration
 
 =head1 DESCRIPTION
 
-This extension allows for Slack updates to be sent out in the
-same manner that emails are dispatched. Meaning that a on any
-condition a Slack action can be called and a Slack specififc
-template can be used to update a Slack channel.
+This extension allows for Slack or Teams updates to be sent out
+in the same manner that emails are dispatched. Meaning that
+on any condition a Slack or Teams action can be called and a
+specific Slack or Teams template can be used to update a channel.
 
 =head1 RT VERSION
 
@@ -64,22 +64,23 @@ Add this line:
 
 =head1 CONFIGURATION
 
-You must add the desired Slack channels and webhook URLs to the
-RT %SlackWebHookUrls config value in RT_SiteConfig.pm. These values
-can be retrieved from the Slack API's Incoming Webhooks configuration
-settings. See example below:
+You must add the desired Slack or Teams channels and webhook URLs to
+the RT %SlackWebHookUrls config value in RT_SiteConfig.pm. These values
+can be retrieved from the Slack or Teams API's Incoming Webhooks
+configuration settings. See example below:
 
     Set( %SlackWebHookUrls,
         '#channel' => 'https://myslackwebhookurl...',
     );
 
-The 'Notify Slack' ScripAction posts to one Slack channel. The default
-Slack channel is currently set to #general. You can update this in
+The 'Notify Slack' ScripAction posts to one Slack or Teams channel.
+The default channel is currently set to #general. You can update this in
 the initialdata file by changing the 'Notify Slack' ScripAction
-Argument to the desired Slack channel ( be sure to include the '#'
+Argument to the desired channel ( be sure to include the '#'
 when indicating the channel name and no '#' for direct messaging ).
-To post to additional Slack channels, copy the ScripAction giving it
+To post to additional channels, copy the ScripAction giving it
 a new Name and Argument, something like "Slack Updates To #Support".
+Note that the template formats vary between Slack and Teams.
 
 =head1 AUTHOR
 
@@ -95,6 +96,11 @@ href="http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-NotifySlack"
         bug-RT-Extension-NotifySlack@rt.cpan.org
     or via the web at
         http://rt.cpan.org/Public/Dist/Display.html?Name=RT-Extension-NotifySlack
+
+=head1 SEE ALSO
+
+L<https://api.slack.com/messaging/webhooks>,
+L<https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook>
 
 =head1 LICENSE AND COPYRIGHT
 
