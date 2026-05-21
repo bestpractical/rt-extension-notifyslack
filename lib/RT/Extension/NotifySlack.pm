@@ -2,9 +2,26 @@ use strict;
 use warnings;
 package RT::Extension::NotifySlack;
 
-our $VERSION = '0.02';
+our $VERSION = '1.00';
 
 use RT::Transaction;
+
+if ( RT->Config->can('RegisterPluginConfig') ) {
+    RT->Config->RegisterPluginConfig(
+        Plugin  => 'NotifySlack',
+        Content => [
+            {
+                Name => 'SlackWebHookUrls',
+                Help => 'https://metacpan.org/pod/RT::Extension::NotifySlack#CONFIGURATION',
+            },
+        ],
+        Meta => {
+            SlackWebHookUrls => {
+                Type => 'JSON',
+            },
+        }
+    );
+}
 
 # Set message for Slack notification transactions
 $RT::Transaction::_BriefDescriptions{'SlackNotified'} = sub {

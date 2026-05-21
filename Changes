@@ -1,5 +1,9 @@
 Revision history for RT-Extension-NotifySlack
 
+1.00 2026-05-21
+ - Add support for RT 6
+ - Add RegisterPluginConfig support for RT 6 web UI config editor
+
 0.02 2020-09-03
  - Update sample template to correctly handle ticket values like Subject
 
