@@ -47,6 +47,57 @@ our @Templates;
     JSON::to_json($payload);
 }
 ]
+},{
+    Name => 'Teams Create Message',
+    Description => 'Send a message to MS Teams channel on ticket create.',
+    Content =>q[
+{
+    my $payload = {
+      "type" => "message",
+      "attachments" => [{
+        "contentType" => "application/vnd.microsoft.card.adaptive",
+        "contentUrl" => "null",
+        "content" => {
+          "$schema" => "http =>//adaptivecards.io/schemas/adaptive-card.json",
+          "type" => "AdaptiveCard",
+          "version" => "1.0",
+          "body" => [{
+              "type" => "TextBlock",
+              "text" => "[#".$Ticket->Id." ".$Ticket->Subject.":](".RT->Config->Get("WebURL")."Ticket/Display.html?id=".$Ticket->Id.")",
+              "style" => "heading",
+              "weight" => "bolder",
+              "size" => "medium",
+              "wrap" => "true"
+            },
+            {
+              "type" => "TextBlock",
+              "text" => $Transaction->Content,
+              "wrap" => "true",
+              "maxLines" => 10
+            },
+            {
+              "type" => "FactSet",
+              "facts" => [{
+                  "title" => "Requestor",
+                  "value" => $Ticket->RequestorAddresses,
+                },
+                {
+                  "title" => "Queue",
+                  "value" => $Ticket->QueueObj->Name,
+                },
+                {
+                  "title" => "Owner",
+                  "value" => $Ticket->OwnerObj->Name,
+                },
+              ]
+            }
+          ]
+        }
+      }]
+    };
+    JSON::to_json($payload);
+}
+]
 });
 
 ########################################################################

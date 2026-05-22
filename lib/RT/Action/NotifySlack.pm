@@ -43,11 +43,11 @@ sub Commit {
     return unless $self->TemplateObj && $self->TemplateObj->MIMEObj;
     my $payload = $self->TemplateObj->MIMEObj->as_string;
 
-    my $req = POST("$webhook_url", ['payload' => $payload]);
+    my $req = POST("$webhook_url", 'Content-Type' => 'application/json', 'Content' => $payload);
 
     my $resp = $ua->request($req);
 
-    RT::Logger->error( "Failed post to slack, status is:" . $resp->status_line . $resp->decoded_content() ) unless $resp->is_success;
+    RT::Logger->error("Failed post to slack, status is:" . $resp->status_line . ' - ' . $resp->decoded_content) unless $resp->is_success;
 
     return 1;
 }
